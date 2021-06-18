@@ -80,7 +80,7 @@ def main():
             monte_carlo_method(l, vx, vy)
 
     plt.tight_layout()
-    
+    plt.savefig("exchange_interaction.png")
     plt.show()
 
 if __name__ == "__main__":
