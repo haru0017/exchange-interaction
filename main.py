@@ -79,6 +79,8 @@ def main():
         for i in range(1000*(j+1)):
             monte_carlo_method(l, vx, vy)
 
+    print(l)
+
     plt.tight_layout()
     plt.savefig("exchange_interaction.png")
     plt.show()
