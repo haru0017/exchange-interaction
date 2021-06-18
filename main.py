@@ -18,14 +18,14 @@ def init_vector(l):
         for x in range(5):
             px.append(x)
             py.append(y)
-            vx.append(round(math.cos(l[y][x])*0.5, 4))
-            vy.append(round(math.sin(l[y][x])*0.5, 4))
+            vx.append(round(math.cos(math.radians(l[4-y][x]))*0.5, 4))
+            vy.append(round(math.sin(math.radians(l[4-y][x]))*0.5, 4))
 
     return px, py, vx, vy
 
 def cal_vector(theta, s, vx, vy):
-        vx[s[1]+s[0]*5] = round(math.cos(theta)*0.5, 4)
-        vy[s[0]+s[1]*5] = round(math.sin(theta)*0.5, 4)
+        vx[20-s[0]*5+s[1]] = round(math.cos(math.radians(theta))*0.5, 4)
+        vy[20-s[0]*5+s[1]] = round(math.sin(math.radians(theta))*0.5, 4)
 
 
 def init_array():
@@ -39,9 +39,9 @@ def init_array():
 
 def inner_product(a, b):
     if a >= b:
-        return round(math.cos(a-b), 4)
+        return round(math.cos(math.radians(a-b)), 4)
     else:
-        return round(math.cos(b-a), 4)
+        return round(math.cos(math.radians(b-a)), 4)
 
 def monte_carlo_method(l, vx, vy):
     s = make_rand_index()
@@ -61,7 +61,7 @@ def monte_carlo_method(l, vx, vy):
     if s[1] != 4:
         sum_before += inner_product(theta, l[s[0]][s[1]+1])
         sum_after += inner_product(new_theta, l[s[0]][s[1]+1])
-    if sum_before < sum_after:
+    if sum_before <= sum_after:
         l[s[0]][s[1]] = new_theta
         cal_vector(new_theta, s, vx, vy)
 
@@ -70,21 +70,18 @@ def main():
     l = init_array()
     px, py, vx, vy = init_vector(l)
 
-    plt.figure()
-    plt.quiver(px, py, vx, vy, angles='xy', scale_units="xy", scale=1)
-    plt.xlim(-1, 5)
-    plt.ylim(-1, 5)
-    plt.show()
+    for j in range(9):
+        plt.subplot(3, 3, j+1)
+        plt.quiver(px, py, vx, vy, angles='xy', scale_units="xy", scale=1)
+        plt.xlim(-1, 5)
+        plt.ylim(-1, 5)
+        plt.title(f'N = {1000+1000*(1/2*j+1)*(j-1)}')
+        for i in range(1000*(j+1)):
+            monte_carlo_method(l, vx, vy)
 
-    for i in range(100000):
-        monte_carlo_method(l, vx, vy)
-
-    plt.figure()
-    plt.quiver(px, py, vx, vy, angles='xy', scale_units="xy", scale=1)
-    plt.xlim(-1, 5)
-    plt.ylim(-1, 5)
+    plt.tight_layout()
+    
     plt.show()
-        
 
 if __name__ == "__main__":
     main()
